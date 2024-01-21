@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Jan 18 21:49:54 2024
-
-@author: Lenovo
-"""
 
 import numpy as np
 import pandas as pd
@@ -19,7 +14,7 @@ import errors as err
 
 def read_data_all(filename, countries):
     """
-    
+
 
     Parameters
     ----------
@@ -54,64 +49,9 @@ def read_data_all(filename, countries):
     return df, df_t
 
 
-# heat map code #
-def generate_heatmap(country, carbon_emission_df,
-                     forest_area_df, agricultural_land_df):
-    """
-    
-
-    Parameters
-    ----------
-    country : TYPE
-        DESCRIPTION.
-    carbon_emission_df : TYPE
-        DESCRIPTION.
-    forest_area_df : TYPE
-        DESCRIPTION.
-    agricultural_land_df : TYPE
-        DESCRIPTION.
-
-    Returns
-    -------
-    None.
-
-    """
-
-    # create dataframe
-    df_corr = pd.DataFrame()
-
-    # accessing data from data frame and create columns
-    df_corr["Co2 emission"] = carbon_emission_df[country].values
-    df_corr["forest_area"] = forest_area_df[country].values
-    df_corr["agricultural_land"] = agricultural_land_df[country].values
-
-    agricultural_land_df
-
-    # create heatmap
-    corr_mat = df_corr.corr().round(2)
-    plt.figure(figsize=(15, 8), dpi=300)
-
-    # show heatmap
-    plt.imshow(corr_mat, cmap="Accent_r")
-    plt.colorbar()
-
-    # create ticks
-    plt.xticks(np.arange(len(corr_mat.columns)),
-               labels=corr_mat.columns, rotation=90)
-    plt.yticks(np.arange(len(corr_mat.columns)), labels=corr_mat.columns)
-
-    plt.title(country)
-
-    # looping
-    for(i, j), corr_xy in np.ndenumerate(corr_mat):
-        plt.text(i, j, corr_xy, ha="center", va="center")
-
-    plt.savefig("Spain_heatmap.png", dpi=300, va="center")
-
-
 def poly(x, a, b, c, d):
     """
-    
+
 
     Parameters
     ----------
@@ -142,7 +82,7 @@ def poly(x, a, b, c, d):
 
 def build_cluster_graph(country):
     """
-    
+
 
     Parameters
     ----------
@@ -229,7 +169,7 @@ def build_cluster_graph(country):
 
 def build_fitting_graph(df_cluster, indicator, title):
     """
-    
+
 
     Parameters
     ----------
@@ -271,11 +211,13 @@ def build_fitting_graph(df_cluster, indicator, title):
 
     # set title
     plt.title(title, fontsize=20)
-    plt.legend()
 
     # plot uncertainty range
-    plt.fill_between(year, low, up, color="yellow", alpha=0.6)
+    plt.fill_between(year, low, up, color="yellow",
+                     alpha=0.6, label="Confidence margin")
     plt.savefig(title+".png", dpi=300, va="center")
+
+    plt.legend()
     plt.show()
 
 
@@ -300,7 +242,3 @@ for x, y, z in zip(countries, title1, title2):
     df_cluster = build_cluster_graph(x)
     build_fitting_graph(df_cluster, "forest_area", y)
     build_fitting_graph(df_cluster, "co2", z)
-
-# heatmap
-generate_heatmap("Spain", carbon_emission_df_t,
-                 forest_area_df_t, agricultural_land_df_t)
